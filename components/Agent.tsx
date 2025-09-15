@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
 import { interviewer } from "@/constants";
 import { createFeedback } from "@/lib/actions/general.action";
+import { playVoice } from "@/lib/playVoice";
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
@@ -48,6 +49,10 @@ const Agent = ({
       if (message.type === "transcript" && message.transcriptType === "final") {
         const newMessage = { role: message.role, content: message.transcript };
         setMessages((prev) => [...prev, newMessage]);
+        // Play AI interviewer message using 11 Labs TTS if role is 'assistant'
+        if (message.role === "assistant" && message.transcript) {
+          playVoice(message.transcript);
+        }
       }
     };
 
